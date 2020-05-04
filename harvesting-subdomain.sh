@@ -1,0 +1,31 @@
+!# /bin/bash
+url=$1
+if[ ! -d "$url" ];then
+    mkdir $url
+fi
+
+if[ ! -d "$url/recon"];then
+    mkdir $url/recon
+fi
+
+echo "[+] harvesting subdomains .....ha ha "
+
+assetfinder $url>>$url/recon/assets.txt
+
+cat $url/recon/assets.text | grep $1 >> $url/recon/final.txt
+
+rm $url/recon/assets.txt
+
+# echo "[+] harvesting using ammas tools "
+
+# amass enum -d $url>>/recon/f.txt
+
+# sort -u $url>>/recon/f.txt >>$url/recon/final.txt
+
+# rm $url/recon/f.txt
+
+echo "[+] probing alive domains..........."
+
+cat $url/recon/final.txt | sort -u httprobe -s -p https:443 | sed 's/https\?:\/\///' | tr -d ':443' >> $url/recon/alive.txt
+
+#using assetfinder tools you can find the subdomainof the any websitesrecon/
